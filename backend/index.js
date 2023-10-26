@@ -1,18 +1,17 @@
 const dotenv = require("dotenv");
 const express = require('express');
+const suggestionRoutes = require('./routes/suggestions');
 
-const app = express(); // create express app
-dotenv.config(); // initialize dotenv
+const app = express();
+dotenv.config();
 
 // middleware
 app.use((req, res, next) => {
-    console.log(req.path, req.method); // log the request path and method
-    next(); // call next to move on to the next middleware
+    console.log(req.path, req.method);
+    next();
 });
 
 // routes
-app.get('/', (req, res) => {
-    res.json({ message: 'Hello World' });
-});
+app.use('/api/suggestions', suggestionRoutes);
 
-app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`)); // listen for requests
+app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`));
