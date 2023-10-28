@@ -11,6 +11,19 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
     "svelte": "^4.0.5",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "pag": "^1.0.1",
+    "postcss": "^8.4.24",
+    "postcss-load-config": "^4.0.1",
+    "autoprefixer": "^10.4.14",
+    "tailwindcss": "^3.3.2"
+  },
+  "dependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.3",
+    "@tailwindcss/line-clamp": "^0.4.2",
+    "@tailwindcss/typography": "^0.5.7",
+    "page": "^1.11.6",
+    "date-fns": "^2.30.0"
   }
 }
