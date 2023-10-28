@@ -11,7 +11,7 @@
 
     // import { setContext } from 'svelte';
     // import { writable } from 'svelte/store';
-    // import Navbar from './lib/components/Navbar.svelte';
+    import Navbar from './lib/Components/Navbar.svelte';
 
     // create user store
     // const user = writable(JSON.parse(localStorage.getItem('user')));
@@ -61,8 +61,8 @@
     router.start()
 </script>
 
-<div>
-    <!--  <Navbar />-->
+<div class="font-manrope">
+      <Navbar />
     <div>
         <svelte:component this="{page}" params="{params}" />
     </div>
