@@ -1,6 +1,6 @@
 <script>
      import { getContext } from 'svelte';
-     import Workouts from '../../stores/workouts.js';
+     import Suggestions from '../../stores/suggestions.js';
 
      // grab the user store
      const currentUser = getContext('user');
@@ -41,7 +41,7 @@
                emptyFields = data.emptyFields;
           } else {
                // Add the new workout to the store
-               Workouts.update(currentData => {
+               Suggestions.update(currentData => {
                     // add item to beginning of array (unshift)
                     currentData[0].unshift(data.workout)
                     return [...currentData];

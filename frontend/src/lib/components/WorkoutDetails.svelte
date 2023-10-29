@@ -1,7 +1,7 @@
 <script>
      export let workout;
      import { getContext } from 'svelte';
-     import Workouts from '../../stores/workouts';
+     import Suggestions from '../../stores/suggestions.js';
      // date fns library
      import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
@@ -27,7 +27,7 @@
 
           if (response.ok) {
                // Remove the workout from the store
-               Workouts.update(currentData => {
+               Suggestions.update(currentData => {
                     let filteredWorkouts = currentData[0].filter(item => item._id !== workout._id);
 
                     return [filteredWorkouts, ...currentData];

@@ -1,9 +1,11 @@
 const dotenv = require( "dotenv" );
 const express = require( "express" );
 const mongoose = require( "mongoose" );
+const cors = require( "cors" );
 const suggestionRoutes = require( "./routes/suggestions" );
 
 const app = express();
+app.use( cors({ origin: "*" }) );
 app.use( express.json() );
 dotenv.config();
 
