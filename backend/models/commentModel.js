@@ -16,4 +16,13 @@ const CommentSchema = new Schema(
     { timestamps: true }
 );
 
+CommentSchema.virtual("replies", {
+    ref: "Reply",
+    localField: "_id",
+    foreignField: "comment"
+});
+
+CommentSchema.set("toObject", { virtuals: true });
+CommentSchema.set("toJSON", { virtuals: true });
+
 module.exports = mongoose.model( "Comment", CommentSchema );

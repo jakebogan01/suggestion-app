@@ -16,12 +16,25 @@ const SuggestionSchema = new Schema(
             type: String,
             required: [ true, "Description is required" ],
         },
-        comments: [{
-            type: Schema.Types.ObjectId,
-            ref: "Comment"
-        }]
+        department: {
+            type: String,
+            required: [ true, "Department is required" ],
+        },
+        tag: {
+            type: String,
+            required: [ true, "Tag is required" ],
+        }
     },
     { timestamps: true }
 );
+
+SuggestionSchema.virtual("comments", {
+    ref: "Comment",
+    localField: "_id",
+    foreignField: "suggestion"
+});
+
+SuggestionSchema.set("toObject", { virtuals: true });
+SuggestionSchema.set("toJSON", { virtuals: true });
 
 module.exports = mongoose.model( "Suggestion", SuggestionSchema );

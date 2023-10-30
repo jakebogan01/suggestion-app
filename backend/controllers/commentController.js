@@ -4,7 +4,7 @@ const mongoose = require( "mongoose" );
 
 // GET all comments
 const getComments = async ( req, res ) => {
-     const comments = await Comment.find();
+     const comments = await Comment.find().populate({ path: "replies", select: "body" }).sort({ createdAt: -1 });
 
      try {
           res.status( 200 ).json( comments );
