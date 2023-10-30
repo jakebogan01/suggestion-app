@@ -1,5 +1,5 @@
 const Suggestion = require( "../models/suggestionModel" );
-const mongoose = require("mongoose");
+const mongoose = require( "mongoose" );
 
 // GET all suggestions
 const getSuggestions = async ( req, res ) => {
@@ -15,7 +15,7 @@ const getSuggestions = async ( req, res ) => {
 // GET suggestion
 const getSuggestion = async ( req, res ) => {
      const { slug } = req.params;
-     const suggestion = await Suggestion.find( { slug: slug } );
+     const suggestion = await Suggestion.find( { slug: slug } ).populate( "comments" );
 
      if ( !suggestion || suggestion.length === 0 ) {
           return res.status( 404 ).json({ error: "No such feedback" });
@@ -30,13 +30,10 @@ const getSuggestion = async ( req, res ) => {
 
 // POST suggestion
 const createSuggestion = async ( req, res ) => {
-     const { user_id, tag_id, department_id, title, slug, description } = req.body;
+     const { title, slug, description } = req.body;
 
      try {
           const suggestion = await Suggestion.create({
-               user_id,
-               tag_id,
-               department_id,
                title,
                slug,
                description
@@ -77,13 +74,10 @@ const updateSuggestion = async ( req, res ) => {
      }
 
      const suggestion = await Suggestion.findOneAndUpdate(
-         { _id: id },
-         {
-              ...req.body,
-         }
+         { _id: id }, { ...req.body }
      );
 
-     if (!suggestion) {
+     if ( !suggestion ) {
           return res.status( 404 ).json({ error: "No such feedback" });
      }
 

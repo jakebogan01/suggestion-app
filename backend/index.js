@@ -3,6 +3,7 @@ const express = require( "express" );
 const mongoose = require( "mongoose" );
 const cors = require( "cors" );
 const suggestionRoutes = require( "./routes/suggestions" );
+const commentRoutes = require( "./routes/comments" );
 
 const app = express();
 app.use( cors({ origin: "*" }) );
@@ -17,6 +18,7 @@ app.use(( req, res, next ) => {
 
 // routes
 app.use( "/api/suggestions", suggestionRoutes );
+app.use( "/api/comments", commentRoutes );
 
 // connect to db
 mongoose.connect( process.env.MONGO_URI )
