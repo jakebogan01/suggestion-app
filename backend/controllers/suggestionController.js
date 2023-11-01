@@ -3,17 +3,7 @@ const mongoose = require( "mongoose" );
 
 // GET all suggestions
 const getSuggestions = async ( req, res ) => {
-     const suggestions = await Suggestion.find()
-             .populate({
-                  path: "comments",
-                  select: "body createdAt",
-                  populate: {
-                       path: "replies",
-                       model: "Reply",
-                       select: "body createdAt"
-                  }
-             })
-             .sort({ createdAt: -1 });
+     const suggestions = await Suggestion.find().select( "title slug description tag" ).sort({ createdAt: -1 });
 
      try {
           res.status( 200 ).json( suggestions );
@@ -25,7 +15,16 @@ const getSuggestions = async ( req, res ) => {
 // GET suggestion
 const getSuggestion = async ( req, res ) => {
      const { slug } = req.params;
-     const suggestion = await Suggestion.find( { slug: slug } ).populate({ path: "comments", select: "body" });
+     const suggestion = await Suggestion.find( { slug: slug } )
+             .populate({
+                  path: "comments",
+                  select: "body createdAt",
+                  populate: {
+                       path: "replies",
+                       model: "Reply",
+                       select: "body createdAt"
+                  }
+             });
 
      if ( !suggestion || suggestion.length === 0 ) {
           return res.status( 404 ).json({ error: "No such feedback" });
@@ -41,6 +40,14 @@ const getSuggestion = async ( req, res ) => {
 // POST suggestion
 const createSuggestion = async ( req, res ) => {
      const { title, slug, description, department, tag } = req.body;
+
+     const existingSlug = await Suggestion.findOne({ slug });
+
+     if (existingSlug) {
+          return res.status(400).json({
+               error: 'Slug is already in use',
+          });
+     }
 
      try {
           const suggestion = await Suggestion.create({

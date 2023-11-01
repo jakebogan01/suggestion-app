@@ -1,16 +1,29 @@
 <script>
-    import router from 'page';
+    import router from "page";
     import { setContext } from 'svelte';
     import { writable } from 'svelte/store';
-    import Navbar from './lib/Components/Navbar.svelte';
-    import Home from './routes/Home.svelte'
+    import Navbar from "./lib/Components/Navbar.svelte";
+    import Index from "./routes/Index.svelte";
+    import Show from "./routes/Show.svelte";
+    import Create from "./routes/Create.svelte";
 
     let page
     let params
 
     router('/', () => {
-        page = Home
-    })
+        page = Index
+    });
+    router('/suggestion/create', () => {
+        page = Create
+    });
+    router(
+        "/suggestions/:slug",
+        (ctx, next) => {
+            params = ctx.params
+            next()
+        },
+        () => (page = Show)
+    );
 
     router.start()
 </script>
@@ -18,6 +31,6 @@
 <div class="font-manrope">
       <Navbar />
     <div>
-        <svelte:component this="{page}" params="{params}" />
+        <svelte:component this="{ page }" params="{ params }" />
     </div>
 </div>
