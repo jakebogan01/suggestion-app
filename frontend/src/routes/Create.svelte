@@ -29,11 +29,10 @@
         if ( !response.ok ) {
             if (data.error.errors) {
                 errors = Object.values( data.error.errors );
+                emptyFields = Object.values( data.error.errors ).map( error => error.path );
             } else {
                 errors = Object.values( {message: data.error} );
             }
-            console.log( "error", errors );
-            // emptyFields = data.emptyFields;
         } else {
             errors = [];
 
@@ -47,7 +46,6 @@
             });
 
             window.location.href = "/";
-            // emptyFields = [];
         }
     };
 </script>
@@ -57,17 +55,17 @@
 
     <div>
         <label for="title">Title:</label>
-        <input type="text" on:change={(e) => ( formValues.title = e.target.value )} name="title" id="title" bind:value={ formValues.title } class:error={ emptyFields.includes("title") }/>
+        <input type="text" on:change={(e) => ( formValues.title = e.target.value )} name="title" id="title" bind:value={ formValues.title } class="{ emptyFields.includes('title') ? 'border border-red-500' : '' }" />
     </div>
 
     <div>
         <label for="description">Description:</label>
-        <textarea on:change={(e) => ( formValues.description = e.target.value )} class:error={ emptyFields.includes("load") } name="description" id="description">{ formValues.description }</textarea>
+        <textarea on:change={(e) => ( formValues.description = e.target.value )} class="{ emptyFields.includes('description') ? 'border border-red-500' : '' }" name="description" id="description">{ formValues.description }</textarea>
     </div>
 
     <div>
         <label for="department">Department:</label>
-        <select on:change={(e) => ( formValues.department = e.target.value )} id="department" name="department" class:error={ emptyFields.includes("reps") }>
+        <select on:change={(e) => ( formValues.department = e.target.value )} id="department" name="department">
             <option value="commercial" selected>Commercial</option>
             <option value="consumer">Consumer</option>
             <option value="finance">Finance</option>
@@ -81,7 +79,7 @@
 
     <div>
         <label for="tag">Tag:</label>
-        <select on:change={(e) => ( formValues.tag = e.target.value )} id="tag" name="tag" class:error={ emptyFields.includes("reps") }>
+        <select on:change={(e) => ( formValues.tag = e.target.value )} id="tag" name="tag">
             <option value="bug" selected>Bug</option>
             <option value="improvement">Improvement</option>
             <option value="issue">Issue</option>

@@ -9,7 +9,7 @@ const SuggestionSchema = new Schema(
         },
         slug: {
             type: String,
-            unique: [ true, "Slug already exists" ],
+            unique: [ true, "Title is already in use" ],
         },
         description: {
             type: String,
