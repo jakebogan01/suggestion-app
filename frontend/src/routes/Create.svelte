@@ -38,12 +38,15 @@
             errors = [];
 
             Suggestions.update( currentData => {
+                if ( currentData.length === 0 ) {
+                    currentData.push( [ data ] );
+                    return [ ...currentData ];
+                }
                 currentData[0].unshift( data )
                 return [ ...currentData ];
             });
 
-            console.log( "Suggestions", $Suggestions);
-            console.log( "new suggestion added!", data);
+            window.location.href = "/";
             // emptyFields = [];
         }
     };
