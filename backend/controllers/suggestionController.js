@@ -40,13 +40,27 @@ const getSuggestion = async ( req, res ) => {
 // POST suggestion
 const createSuggestion = async ( req, res ) => {
      const { title, slug, description, department, tag } = req.body;
-
      const existingSlug = await Suggestion.findOne({ slug });
+     let emptyFields = [];
 
      if (existingSlug) {
-          return res.status(400).json({
-               error: 'Slug is already in use',
-          });
+          return res.status( 400 ).json({ error: 'Slug is already in use', emptyFields });
+     }
+
+     if (!title) {
+           emptyFields.push( "title" );
+     }
+     if (!description) {
+          emptyFields.push( "description" );
+     }
+     if (!department) {
+          emptyFields.push( "department" );
+     }
+     if (!tag) {
+          emptyFields.push( "tag" );
+     }
+     if ( emptyFields.length > 0 ) {
+          return res.status( 400 ).json({ error: 'Please fill in all the fields', emptyFields });
      }
 
      try {

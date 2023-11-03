@@ -3,7 +3,7 @@
     export let params;
     import Suggestions from "../stores/suggestions";
 
-    let errors = [];
+    let error = [];
     let emptyFields = [];
     let formValues = {
         title: "",
@@ -13,36 +13,33 @@
         tag: "Bug"
     };
 
-    const handleSubmit = async ( e ) => {
-        formValues.slug = formValues.title.toLowerCase().replace( / /g, "-" );
+    const handleSubmit = async (e) => {
+        formValues.slug = formValues.title.toLowerCase().replace(/ /g, "-");
 
         const response = await fetch("/api/suggestions/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify( formValues ),
+            body: JSON.stringify(formValues),
         });
 
         const data = await response.json();
 
-        if ( !response.ok ) {
-            if (data.error.errors) {
-                errors = Object.values( data.error.errors );
-                emptyFields = Object.values( data.error.errors ).map( error => error.path );
-            } else {
-                errors = Object.values( {message: data.error} );
-            }
+        if (!response.ok) {
+            error = data.error;
+            emptyFields = data.emptyFields;
+            console.log(error)
         } else {
-            errors = [];
+            error = [];
 
-            Suggestions.update( currentData => {
-                if ( currentData.length === 0 ) {
-                    currentData.push( [ data ] );
-                    return [ ...currentData ];
+            Suggestions.update(currentData => {
+                if (currentData.length === 0) {
+                    currentData.push([data]);
+                    return [...currentData];
                 }
-                currentData[0].unshift( data )
-                return [ ...currentData ];
+                currentData[0].unshift(data)
+                return [...currentData];
             });
 
             window.location.href = "/";
@@ -50,22 +47,28 @@
     };
 </script>
 
-<form on:submit|preventDefault={ handleSubmit } class="create">
+<form on:submit|preventDefault={handleSubmit} class="create">
     <h3>Add a New Suggestion</h3>
 
     <div>
         <label for="title">Title:</label>
-        <input type="text" on:change={(e) => ( formValues.title = e.target.value )} name="title" id="title" bind:value={ formValues.title } class="{ emptyFields.includes('title') ? 'border border-red-500' : '' }" />
+        <input type="text" on:change={(e) => (formValues.title = e.target.value)} name="title" id="title" bind:value={formValues.title} class="{emptyFields.includes('title') ? 'border border-red-500' : ''}" />
+        {#if emptyFields.includes('title')}
+            <div class="text-red-500">Title must be filled</div>
+        {/if}
     </div>
 
     <div>
         <label for="description">Description:</label>
-        <textarea on:change={(e) => ( formValues.description = e.target.value )} class="{ emptyFields.includes('description') ? 'border border-red-500' : '' }" name="description" id="description">{ formValues.description }</textarea>
+        <textarea on:change={(e) => (formValues.description = e.target.value)} class="{emptyFields.includes('description') ? 'border border-red-500' : ''}" name="description" id="description">{formValues.description}</textarea>
+        {#if emptyFields.includes('description')}
+            <div class="text-red-500">Description must be filled</div>
+        {/if}
     </div>
 
     <div>
         <label for="department">Department:</label>
-        <select on:change={(e) => ( formValues.department = e.target.value )} id="department" name="department">
+        <select on:change={(e) => (formValues.department = e.target.value)} id="department" name="department">
             <option value="commercial" selected>Commercial</option>
             <option value="consumer">Consumer</option>
             <option value="finance">Finance</option>
@@ -79,7 +82,7 @@
 
     <div>
         <label for="tag">Tag:</label>
-        <select on:change={(e) => ( formValues.tag = e.target.value )} id="tag" name="tag">
+        <select on:change={(e) => (formValues.tag = e.target.value)} id="tag" name="tag">
             <option value="bug" selected>Bug</option>
             <option value="improvement">Improvement</option>
             <option value="issue">Issue</option>
@@ -92,14 +95,8 @@
 
     <div>
         <button type="submit" class="bg-gray-500 px-4 py-6">Add Suggestion</button>
-        {#if errors}
-            {#each errors as error}
-                {#if error.message}
-                    <div class="text-red-500">{ error.message }</div>
-                {:else}
-                    <div class="text-red-500">{ error }</div>
-                {/if}
-            {/each}
+        {#if error}
+            <div class="text-red-500">{error}</div>
         {/if}
     </div>
 </form>
