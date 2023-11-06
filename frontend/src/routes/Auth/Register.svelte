@@ -62,3 +62,7 @@
           <div class="error">{error}</div>
      {/if}
 </form>
+
+<div>
+     <a href="/login">Login</a>
+</div>

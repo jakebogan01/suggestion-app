@@ -8,25 +8,59 @@
     import Index from "./routes/Index.svelte";
     import Show from "./routes/Show.svelte";
     import Create from "./routes/Create.svelte";
+    import error404 from "./routes/Error/404.svelte";
 
     const user = writable(JSON.parse(localStorage.getItem('user')));
     setContext('user', user);
-    $: console.log($user)
+    $: console.log($user);
 
     let page
     let params
 
-    router("/Register", () => page = Register );
-    router("/Login", () => page = Login );
-    router("/", () => page = Index );
-    router("/suggestion/create", () => page = Create );
+    router("/Register", () => {
+        if ($user) {
+            return router("/");
+        } else {
+            page = Register
+        }
+    });
+    router("/Login", () => {
+        if ($user) {
+            return router("/");
+        } else {
+            page = Login
+        }
+    });
+    router("/", () => {
+        if (!$user) {
+            return router("/login");
+        } else {
+            page = Index
+        }
+    } );
+    router("/suggestion/create", () => {
+        if (!$user) {
+            return router("/login");
+        } else {
+            page = Create
+        }
+    });
     router("/suggestions/:slug",
         (ctx, next) => {
             params = ctx.params
             next()
         },
-        () => (page = Show)
+        () => {
+            if (!$user) {
+                return router("/login");
+            } else {
+                page = Show
+            }
+        }
     );
+    router("*", () => {
+        page = error404
+    });
 
     router.start()
 </script>
