@@ -1,6 +1,7 @@
 <script>
     /* svelte-ignore unused-export-let */
     export let params;
+    import router from "page";
     import Suggestions from "../stores/suggestions";
 
     let error = [];
@@ -42,7 +43,7 @@
                 return [...currentData];
             });
 
-            window.location.href = "/";
+            router.redirect('/');
         }
     };
 </script>

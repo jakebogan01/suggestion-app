@@ -1,6 +1,7 @@
 <script>
     /* svelte-ignore unused-export-let */
     export let params;
+    import router from "page";
     import { onMount } from "svelte";
     import Suggestions from "../stores/suggestions";
     import Suggestion from "../stores/suggestion";
@@ -34,9 +35,10 @@
                 return [ filteredSuggestions, ...currentData ];
             });
 
-            window.location.href = "/";
+            router.redirect('/');
+
         } else {
-            window.location.href = "/";
+            router.redirect('/');
         }
     }
 </script>
