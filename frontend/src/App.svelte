@@ -11,6 +11,7 @@
 
     const user = writable(JSON.parse(localStorage.getItem('user')));
     setContext('user', user);
+    $: console.log($user)
 
     let page
     let params
