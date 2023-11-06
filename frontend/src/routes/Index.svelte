@@ -1,8 +1,11 @@
 <script>
      /* svelte-ignore unused-export-let */
      export let params;
+     import router from 'page';
      import { onMount, getContext } from "svelte";
      import Suggestions from "../stores/suggestions";
+
+     const currentUser = getContext('user');
 
      onMount( async () => {
           const response = await fetch( "/api/suggestions/");
@@ -12,6 +15,12 @@
                Suggestions.set([ data ]);
           }
      })
+
+     const handleLogout = () => {
+          localStorage.setItem('user', null);
+          currentUser.set(null);
+          router.redirect('/register');
+     };
 </script>
 
 <div>
@@ -31,5 +40,9 @@
                     <p>There is no feedback</p>
                {/each}
           {/if}
+     </div>
+
+     <div>
+          <button on:click={handleLogout} type="button">Log out</button>
      </div>
 </div>
