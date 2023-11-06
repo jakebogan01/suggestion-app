@@ -1,14 +1,13 @@
 <script>
-     import router from 'page';
-     import { getContext } from 'svelte';
+     /* svelte-ignore unused-export-let */
      export let params;
+     import router from "page";
+     import { getContext } from "svelte";
 
-     // grab the user store
-     const currentUser = getContext('user');
-
+     const currentUser = getContext("user");
      let inputValues = {
-          email: '',
-          password: '',
+          email: "",
+          password: "",
      };
      let isLoading = null;
      let error = null;
@@ -17,7 +16,6 @@
           isLoading = true;
           error = null;
 
-          // // Send the data to the server
           const response = await fetch('/api/user/login', {
                method: 'POST',
                headers: {
@@ -25,22 +23,19 @@
                },
                body: JSON.stringify(inputValues),
           });
-          // Handle the response
+
           const data = await response.json();
 
           if (!response.ok) {
                isLoading = false;
                error = data.error;
           } else {
-               // Add the user to the store
                localStorage.setItem('user', JSON.stringify(data));
 
-               // Updating user store
                currentUser.set(data);
                console.log($currentUser)
                console.log('User logged in', data);
 
-               // Reset the form
                inputValues = {
                     email: '',
                     password: '',
@@ -52,7 +47,7 @@
 </script>
 
 <form on:submit|preventDefault={handleSubmit} class="login">
-     <h3>Log in</h3>
+     <h3>Login</h3>
 
      <label for="email">Email:</label>
      <input type="email" on:change={(e) => (inputValues.email = e.target.value)} name="email" id="email" bind:value={inputValues.email} />
@@ -60,7 +55,10 @@
      <label for="password">Password:</label>
      <input type="password" on:change={(e) => (inputValues.password = e.target.value)} name="password" id="password" bind:value={inputValues.password} />
 
-     <button disabled={isLoading} type="submit">Log in</button>
+     <div>
+          <button disabled={isLoading} type="submit">Login</button>
+     </div>
+
      {#if error}
           <div class="error">{error}</div>
      {/if}

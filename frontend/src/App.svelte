@@ -4,6 +4,7 @@
     import { writable } from 'svelte/store';
     import Navbar from "./lib/Components/Navbar.svelte";
     import Register from "./routes/Auth/Register.svelte";
+    import Login from "./routes/Auth/Login.svelte";
     import Index from "./routes/Index.svelte";
     import Show from "./routes/Show.svelte";
     import Create from "./routes/Create.svelte";
@@ -15,6 +16,7 @@
     let params
 
     router("/Register", () => page = Register );
+    router("/Login", () => page = Login );
     router("/", () => page = Index );
     router("/suggestion/create", () => page = Create );
     router("/suggestions/:slug",

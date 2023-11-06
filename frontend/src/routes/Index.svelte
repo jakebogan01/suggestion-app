@@ -19,7 +19,7 @@
      const handleLogout = () => {
           localStorage.setItem('user', null);
           currentUser.set(null);
-          router.redirect('/register');
+          router.redirect('/login');
      };
 </script>
 
