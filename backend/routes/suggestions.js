@@ -1,11 +1,5 @@
 const express = require( "express" );
-const {
-    getSuggestions,
-    getSuggestion,
-    createSuggestion,
-    deleteSuggestion,
-    updateSuggestion
-} = require( "../controllers/suggestionController" );
+const { getSuggestions, getSuggestion, createSuggestion, deleteSuggestion, updateSuggestion } = require( "../controllers/suggestionController" );
 const router = express.Router();
 
 router.get( "/", getSuggestions ); // GET all suggestions

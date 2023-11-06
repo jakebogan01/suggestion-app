@@ -2,6 +2,7 @@ const dotenv = require( "dotenv" );
 const express = require( "express" );
 const mongoose = require( "mongoose" );
 const cors = require( "cors" );
+const userRoutes = require( "./routes/users" );
 const suggestionRoutes = require( "./routes/suggestions" );
 const commentRoutes = require( "./routes/comments" );
 const replyRoutes = require( "./routes/replies" );
@@ -18,6 +19,7 @@ app.use(( req, res, next ) => {
 });
 
 // routes
+app.use( "/api/user", userRoutes );
 app.use( "/api/suggestions", suggestionRoutes );
 app.use( "/api/comments", commentRoutes );
 app.use( "/api/replies", replyRoutes );

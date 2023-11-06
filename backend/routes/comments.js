@@ -1,8 +1,5 @@
 const express = require( "express" );
-const {
-    getComments,
-    createComment
-} = require( "../controllers/commentController" );
+const { getComments, createComment } = require( "../controllers/commentController" );
 const router = express.Router();
 
 router.get( "/", getComments ); // GET all comments
