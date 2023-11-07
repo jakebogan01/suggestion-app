@@ -41,6 +41,7 @@ const getSuggestion = async ( req, res ) => {
 const createSuggestion = async ( req, res ) => {
      const { title, slug, description, department, tag, user_id } = req.body;
      const existingSlug = await Suggestion.findOne({ slug });
+     const userId = req.user._id;
      let emptyFields = [];
 
      if (existingSlug) {
@@ -59,9 +60,6 @@ const createSuggestion = async ( req, res ) => {
      if (!tag) {
           emptyFields.push( "tag" );
      }
-     if (!user_id) {
-          emptyFields.push( "user_id" );
-     }
      if ( emptyFields.length > 0 ) {
           return res.status( 400 ).json({ error: 'Please fill in all the fields', emptyFields });
      }
@@ -73,7 +71,7 @@ const createSuggestion = async ( req, res ) => {
                description,
                department,
                tag,
-               user_id
+               user_id: userId
           });
           res.status( 200 ).json( suggestion );
      } catch ( error ) {
