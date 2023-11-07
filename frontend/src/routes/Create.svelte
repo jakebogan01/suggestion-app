@@ -1,8 +1,12 @@
 <script>
     /* svelte-ignore unused-export-let */
+    import {getContext} from "svelte";
+
     export let params;
     import router from "page";
     import Suggestions from "../stores/suggestions";
+
+    const currentUser = getContext('user');
 
     let error = [];
     let emptyFields = [];
@@ -21,6 +25,7 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${$currentUser.token}`,
             },
             body: JSON.stringify(formValues),
         });

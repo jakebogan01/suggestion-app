@@ -4,11 +4,17 @@
      import router from 'page';
      import { onMount, getContext } from "svelte";
      import Suggestions from "../stores/suggestions";
+     import Suggestion from "../stores/suggestion";
 
      const currentUser = getContext('user');
 
      onMount( async () => {
-          const response = await fetch( "/api/suggestions/");
+          const response = await fetch( "/api/suggestions/", {
+               headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${$currentUser.token}`,
+               },
+          });
           const data = await response.json();
 
           if ( response.ok ) {
@@ -16,9 +22,13 @@
           }
      })
 
+     $: console.log($Suggestions, $Suggestion)
+
      const handleLogout = () => {
           localStorage.setItem('user', null);
           currentUser.set(null);
+          Suggestions.set([]);
+          Suggestion.set([]);
           router.redirect('/login');
      };
 </script>

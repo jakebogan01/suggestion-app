@@ -33,8 +33,8 @@
                localStorage.setItem('user', JSON.stringify(data));
 
                currentUser.set(data);
-               console.log($currentUser)
-               console.log('User logged in', data);
+               // console.log($currentUser)
+               // console.log('User logged in', data);
 
                inputValues = {
                     email: '',

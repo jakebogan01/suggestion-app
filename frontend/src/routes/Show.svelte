@@ -2,13 +2,20 @@
     /* svelte-ignore unused-export-let */
     export let params;
     import router from "page";
-    import { onMount } from "svelte";
+    import { getContext, onMount} from "svelte";
     import Suggestions from "../stores/suggestions";
     import Suggestion from "../stores/suggestion";
     import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
+    const currentUser = getContext('user');
+
     onMount( async () => {
-        const response = await fetch( `/api/suggestions/${ params.slug }`);
+        const response = await fetch( `/api/suggestions/${ params.slug }`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${$currentUser.token}`,
+            },
+        });
         const data = await response.json();
 
         if ( response.ok ) {
@@ -21,6 +28,7 @@
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${$currentUser.token}`,
             },
         });
         // const data = await response.json();
