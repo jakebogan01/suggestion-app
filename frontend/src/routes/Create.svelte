@@ -1,9 +1,8 @@
 <script>
     /* svelte-ignore unused-export-let */
-    import {getContext} from "svelte";
-
     export let params;
     import router from "page";
+    import {getContext} from "svelte";
     import Suggestions from "../stores/suggestions";
 
     const currentUser = getContext('user');

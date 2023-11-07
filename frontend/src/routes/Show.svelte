@@ -2,7 +2,7 @@
     /* svelte-ignore unused-export-let */
     export let params;
     import router from "page";
-    import { getContext, onMount} from "svelte";
+    import { getContext, onMount } from "svelte";
     import Suggestions from "../stores/suggestions";
     import Suggestion from "../stores/suggestion";
     import formatDistanceToNow from "date-fns/formatDistanceToNow";
