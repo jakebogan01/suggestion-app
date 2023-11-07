@@ -31,7 +31,6 @@
                 'Authorization': `Bearer ${$currentUser.token}`,
             },
         });
-        // const data = await response.json();
 
         if ( response.ok ) {
             Suggestions.update( currentData => {

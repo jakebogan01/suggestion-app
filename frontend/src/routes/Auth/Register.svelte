@@ -33,8 +33,6 @@
                localStorage.setItem('user', JSON.stringify(data));
 
                currentUser.set(data);
-               console.log($currentUser)
-               console.log('New user added!', data);
 
                inputValues = {
                     email: '',
