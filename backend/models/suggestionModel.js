@@ -22,6 +22,10 @@ const SuggestionSchema = new Schema(
         tag: {
             type: String,
             required: [ true, "Tag is required" ],
+        },
+        user_id: {
+            type: String,
+            required: true,
         }
     },
     { timestamps: true }

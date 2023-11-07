@@ -3,7 +3,7 @@ const mongoose = require( "mongoose" );
 
 // GET all suggestions
 const getSuggestions = async ( req, res ) => {
-     const suggestions = await Suggestion.find().select( "title slug description tag" ).sort({ createdAt: -1 });
+     const suggestions = await Suggestion.find().select( "title slug description tag user_id" ).sort({ createdAt: -1 });
 
      try {
           res.status( 200 ).json( suggestions );
@@ -39,7 +39,7 @@ const getSuggestion = async ( req, res ) => {
 
 // POST suggestion
 const createSuggestion = async ( req, res ) => {
-     const { title, slug, description, department, tag } = req.body;
+     const { title, slug, description, department, tag, user_id } = req.body;
      const existingSlug = await Suggestion.findOne({ slug });
      let emptyFields = [];
 
@@ -59,6 +59,9 @@ const createSuggestion = async ( req, res ) => {
      if (!tag) {
           emptyFields.push( "tag" );
      }
+     if (!user_id) {
+          emptyFields.push( "user_id" );
+     }
      if ( emptyFields.length > 0 ) {
           return res.status( 400 ).json({ error: 'Please fill in all the fields', emptyFields });
      }
@@ -69,7 +72,8 @@ const createSuggestion = async ( req, res ) => {
                slug,
                description,
                department,
-               tag
+               tag,
+               user_id
           });
           res.status( 200 ).json( suggestion );
      } catch ( error ) {
