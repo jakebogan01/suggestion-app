@@ -22,8 +22,6 @@
           }
      })
 
-     $: console.log($Suggestions, $Suggestion)
-
      const handleLogout = () => {
           localStorage.setItem('user', null);
           currentUser.set(null);
