@@ -16,6 +16,14 @@ const getSuggestions = async ( req, res ) => {
 const getSuggestion = async ( req, res ) => {
      const { slug } = req.params;
      const suggestion = await Suggestion.find( { slug: slug } )
+             // .populate({
+             //      path: "comments",
+             //      select: "body createdAt",
+             //      populate: {
+             //           path: "user",
+             //           select: "email createdAt"
+             //      }
+             // })
              .populate({
                   path: "comments",
                   select: "body createdAt",

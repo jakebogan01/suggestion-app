@@ -20,7 +20,7 @@ const createReply = async ( req, res ) => {
           const reply = new Reply( req.body );
           await reply.save();
 
-          const comment = await Comment.findById({ _id: reply.comment })
+          const comment = await Comment.findById({ _id: reply.comment });
           comment.replies.push( reply );
           await comment.save();
 

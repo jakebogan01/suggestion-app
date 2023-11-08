@@ -18,6 +18,15 @@ const UserSchema = new Schema(
     { timestamps: true }
 );
 
+UserSchema.virtual("comments", {
+    ref: "Comment",
+    localField: "_id",
+    foreignField: "user"
+});
+
+UserSchema.set("toObject", { virtuals: true });
+UserSchema.set("toJSON", { virtuals: true });
+
 UserSchema.statics.register = async function (email, password) {
     if (!email || !password) {
         throw new Error("All fields must be provided");

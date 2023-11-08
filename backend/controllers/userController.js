@@ -55,7 +55,7 @@ const getUser = async ( req, res ) => {
         return res.status( 404 ).json({ error: "No such user" });
     }
 
-    const user = await User.find({ _id: id });
+    const user = await User.find({ _id: id }).populate({path: "comments", select: "body createdAt"});
 
     if ( !user ) {
         return res.status( 404 ).json({ error: "No such user" });

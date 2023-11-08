@@ -11,6 +11,11 @@ const CommentSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "Suggestion",
             required: true
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true
         }
     },
     { timestamps: true }
