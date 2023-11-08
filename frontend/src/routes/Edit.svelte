@@ -2,8 +2,9 @@
     /* svelte-ignore unused-export-let */
     export let params;
     import router from "page";
-    import {getContext} from "svelte";
+    import { getContext, onMount } from "svelte";
     import Suggestions from "../stores/suggestions";
+    import Suggestion from "../stores/suggestion";
 
     const currentUser = getContext('user');
 
@@ -17,11 +18,32 @@
         tag: "Bug"
     };
 
-    const handleSubmit = async () => {
+    onMount( async () => {
+        const response = await fetch( `/api/suggestions/${ params.slug }`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${$currentUser.token}`,
+            },
+        });
+        const data = await response.json();
+
+        if ( response.ok ) {
+            Suggestion.set(data);
+            formValues = {
+                title: $Suggestion[0].title,
+                slug: $Suggestion[0].slug,
+                description: $Suggestion[0].description,
+                department: $Suggestion[0].department,
+                tag: $Suggestion[0].tag,
+            };
+        }
+    })
+
+    const handleSubmit = async (id) => {
         formValues.slug = formValues.title.toLowerCase().replace(/ /g, "-");
 
-        const response = await fetch("/api/suggestions/", {
-            method: "POST",
+        const response = await fetch(`/api/suggestions/${ id }`, {
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${$currentUser.token}`,
@@ -52,12 +74,12 @@
     };
 </script>
 
-<form on:submit|preventDefault={handleSubmit} class="create">
+<form on:submit|preventDefault={() => { handleSubmit($Suggestion[0]._id) }} class="create">
     <h3>Add a New Suggestion</h3>
 
     <div>
         <label for="title">Title:</label>
-        <input type="text" on:input={(e) => (formValues.title = e.target.value)} name="title" id="title" bind:value={formValues.title} class="{emptyFields.includes('title') ? 'border border-red-500' : ''}" />
+        <input type="text" on:input={(e) => (formValues.title = e.target.value)} name="title" id="title" value={formValues.title} class="{emptyFields.includes('title') ? 'border border-red-500' : ''}" />
         {#if emptyFields.includes('title')}
             <div class="text-red-500">Title must be filled</div>
         {/if}
@@ -73,8 +95,8 @@
 
     <div>
         <label for="department">Department:</label>
-        <select on:change={(e) => (formValues.department = e.target.value)} id="department" name="department">
-            <option value="commercial" selected>Commercial</option>
+        <select on:change={(e) => (formValues.department = e.target.value)} value={formValues.department} id="department" name="department">
+            <option value="commercial">Commercial</option>
             <option value="consumer">Consumer</option>
             <option value="finance">Finance</option>
             <option value="it">IT</option>
@@ -87,7 +109,7 @@
 
     <div>
         <label for="tag">Tag:</label>
-        <select on:change={(e) => (formValues.tag = e.target.value)} id="tag" name="tag">
+        <select on:change={(e) => (formValues.tag = e.target.value)} value={formValues.tag} id="tag" name="tag">
             <option value="bug" selected>Bug</option>
             <option value="improvement">Improvement</option>
             <option value="issue">Issue</option>

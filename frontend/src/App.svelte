@@ -8,6 +8,7 @@
     import Index from "./routes/Index.svelte";
     import Show from "./routes/Show.svelte";
     import Create from "./routes/Create.svelte";
+    import Edit from "./routes/Edit.svelte";
     import error404 from "./routes/Error/404.svelte";
 
     const user = writable(JSON.parse(localStorage.getItem('user')));
@@ -44,8 +45,19 @@
             page = Create
         }
     });
-    router("/suggestions/:slug",
-        (ctx, next) => {
+    router("/suggestion/edit/:slug", (ctx, next) => {
+            params = ctx.params
+            next()
+        },
+        () => {
+            if (!$user) {
+                return router("/login");
+            } else {
+                page = Edit
+            }
+        }
+    );
+    router("/suggestions/:slug", (ctx, next) => {
             params = ctx.params
             next()
         },

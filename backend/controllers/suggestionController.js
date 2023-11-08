@@ -116,6 +116,25 @@ const updateSuggestion = async ( req, res ) => {
           return res.status( 404 ).json({ error: "No such feedback" });
      }
 
+     const { title, description, department, tag } = req.body;
+     let emptyFields = [];
+
+     if (!title) {
+          emptyFields.push( "title" );
+     }
+     if (!description) {
+          emptyFields.push( "description" );
+     }
+     if (!department) {
+          emptyFields.push( "department" );
+     }
+     if (!tag) {
+          emptyFields.push( "tag" );
+     }
+     if ( emptyFields.length > 0 ) {
+          return res.status( 400 ).json({ error: 'Please fill in all the fields', emptyFields });
+     }
+
      const suggestion = await Suggestion.findOneAndUpdate(
          { _id: id }, { ...req.body }
      );
