@@ -9,6 +9,8 @@
      const currentUser = getContext('user');
 
      onMount( async () => {
+          Suggestion.set([]);
+
           const response = await fetch( "/api/suggestions/", {
                headers: {
                     'Content-Type': 'application/json',
