@@ -11,6 +11,11 @@ const ReplySchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "Comment",
             required: true
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true
         }
     },
     { timestamps: true }

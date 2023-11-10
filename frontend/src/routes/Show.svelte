@@ -8,12 +8,29 @@
     import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
     const currentUser = getContext('user');
+    let showReply = false;
+
+    let error = [];
+    let commentValues = {
+        body: "",
+        user: $currentUser?.id,
+        suggestion: null
+    };
+    let replyValues = {
+        body: "",
+        user: $currentUser?.id,
+        comment: null
+    };
+    $: {
+        commentValues;
+        replyValues;
+    }
 
     onMount( async () => {
-        const response = await fetch( `/api/suggestions/${ params.slug }`, {
+        const response = await fetch( `/api/suggestions/${ params?.slug }`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${$currentUser.token}`,
+                'Authorization': `Bearer ${$currentUser?.token}`,
             },
         });
         const data = await response.json();
@@ -23,12 +40,12 @@
         }
     })
 
-    const handleDelete = async ( id ) => {
+    const deletePost = async ( id ) => {
         const response = await fetch( `/api/suggestions/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${$currentUser.token}`,
+                'Authorization': `Bearer ${$currentUser?.token}`,
             },
         });
 
@@ -48,42 +65,149 @@
             router.redirect('/');
         }
     }
+
+    const postComment = async () => {
+        commentValues.suggestion = $Suggestion[0]?._id;
+
+        const response = await fetch("/api/comments/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${$currentUser?.token}`,
+            },
+            body: JSON.stringify(commentValues),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.log(error)
+            console.log('not good to go')
+        } else {
+            console.log('good to go')
+            Suggestion.update(currentData => {
+                if (currentData[0].comments.length === 0) {
+                    currentData[0].comments.push([data]);
+                    return [...currentData];
+                }
+                currentData[0].comments.unshift(data)
+                return [...currentData];
+            })
+
+            commentValues = {
+                body: "",
+                user: $currentUser?.id,
+                suggestion: $Suggestion[0]._id
+            };
+        }
+    };
+
+    const postReply = async () => {
+        const response = await fetch("/api/replies/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${$currentUser?.token}`,
+            },
+            body: JSON.stringify(replyValues),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.log(error)
+            console.log('not good to go')
+        } else {
+            console.log('good to go')
+            Suggestion.update(currentData => {
+                const comment = currentData[0].comments.find(obj => obj.id === replyValues.comment);
+                if (comment?.replies.length === 0) {
+                    comment.replies.push([data]);
+                    return [...currentData];
+                }
+                comment.replies.unshift(data)
+                return [...currentData];
+            })
+
+            replyValues = {
+                body: "",
+                user: $currentUser?.id,
+                comment: null
+            };
+        }
+    };
+
+    const replyToComment = (id) => {
+        showReply = true;
+        replyValues.comment = id;
+    }
 </script>
 
 <h1>single suggestion</h1>
-{#if $Suggestion.length < 1}
+{#if $Suggestion?.length < 1}
     <p>loading...</p>
 {:else}
     <div class="border-2 border-black p-2">
-        <p>{ $Suggestion[0].title }</p>
-        <a href="/suggestions/{ $Suggestion[0].slug }" class="text-blue-500">{ $Suggestion[0].slug }</a>
-        <p>{ $Suggestion[0].description }</p>
-        <p class="p-2 bg-blue-200">{ $Suggestion[0].tag }</p>
+        <p>{ $Suggestion[0]?.title }</p>
+        <a href="/suggestions/{ $Suggestion[0]?.slug }" class="text-blue-500">{ $Suggestion[0]?.slug }</a>
+        <p>{ $Suggestion[0]?.description }</p>
+        <p class="p-2 bg-blue-200">{ $Suggestion[0]?.tag }</p>
 
-        {#if $currentUser.id === $Suggestion[0].user_id}
-            <button type="button" on:click={()=> { handleDelete( $Suggestion[0]._id ) }}>
+        {#if $currentUser?.id === $Suggestion[0]?.user_id}
+            <button type="button" on:click={()=> { deletePost( $Suggestion[0]?._id ) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" /></svg>
             </button>
-            <a href="/suggestion/edit/{$Suggestion[0].slug}">
+            <a href="/suggestion/edit/{$Suggestion[0]?.slug}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
             </a>
         {/if}
     </div>
 
-    {#each $Suggestion[0].comments as comment}
+    {#each $Suggestion[0]?.comments as comment (comment._id)}
         <div class="border border-red-500 p-2">
-            <p>{ comment.body }</p>
-            <p>{formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}</p>
+            <p>{ comment?.body }</p>
+            <p>{comment?.createdAt ? formatDistanceToNow(new Date(comment?.createdAt), { addSuffix: true }) : 'less than a minute ago'}</p>
+            <button type="button" on:click={()=>{replyToComment(comment._id)}}>Reply</button>
         </div>
-        {#each comment.replies as reply}
-            <div class="border border-green-500 py-2 pl-10">
-                <p>{ reply.body }</p>
-                <p>{formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true })}</p>
-            </div>
-        {/each}
+        {#if comment?.replies}
+            {#each comment?.replies.sort() as reply (reply._id)}
+                <div class="border border-green-500 py-2 pl-10">
+                    <p>{ reply?.body }</p>
+                    <p>{reply?.createdAt ? formatDistanceToNow(new Date(reply?.createdAt), { addSuffix: true }) : 'less than a minute ago'}</p>
+                </div>
+            {/each}
+        {/if}
     {/each}
 {/if}
 
 <div>
     <a href="/">back to suggestions</a>
 </div>
+
+<form on:submit|preventDefault={postComment}>
+    <h3>Create comment</h3>
+
+    <div>
+        <label for="body">Body:</label>
+        <textarea on:input={(e) => (commentValues.body = e.target.value)} name="description" id="description">{commentValues.body}</textarea>
+    </div>
+
+    <div>
+        <button type="submit" class="bg-gray-500 px-4 py-6">Post</button>
+    </div>
+</form>
+
+{#if showReply}
+    <form on:submit|preventDefault={postReply}>
+        <h3>Reply</h3>
+
+        <div>
+            <label for="body">Body:</label>
+            <textarea on:input={(e) => (replyValues.body = e.target.value)} name="description" id="description">{replyValues.body}</textarea>
+        </div>
+
+        <div>
+            <button type="submit" class="bg-gray-500 px-4 py-6">Post</button>
+        </div>
+    </form>
+{/if}
