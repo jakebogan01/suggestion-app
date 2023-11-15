@@ -4,9 +4,9 @@
     import router from "page";
     import { getContext, onMount } from "svelte";
     import Suggestions from "../stores/suggestions";
-    import Suggestion from "../stores/suggestion";
 
     const currentUser = getContext('user');
+    const suggestion = getContext('suggestion');
 
     let error = [];
     let emptyFields = [];
@@ -14,8 +14,8 @@
         title: "",
         slug: "",
         description: "",
-        department: "Commercial",
-        tag: "Bug"
+        department: null,
+        tag: null
     };
 
     onMount( async () => {
@@ -28,16 +28,20 @@
         const data = await response.json();
 
         if ( response.ok ) {
-            Suggestion.set(data);
+            suggestion.set(data[0]);
             formValues = {
-                title: $Suggestion[0].title,
-                slug: $Suggestion[0].slug,
-                description: $Suggestion[0].description,
-                department: $Suggestion[0].department,
-                tag: $Suggestion[0].tag,
+                title: $suggestion.title,
+                slug: $suggestion.slug,
+                description: $suggestion.description,
+                department: $suggestion.department.toLowerCase(),
+                tag: $suggestion.tag.toLowerCase()
             };
         }
     })
+
+    $: {
+        console.table(formValues)
+    }
 
     const handleSubmit = async (id) => {
         formValues.slug = formValues.title.toLowerCase().replace(/ /g, "-");
@@ -74,7 +78,7 @@
     };
 </script>
 
-<form on:submit|preventDefault={() => { handleSubmit($Suggestion[0]._id) }} class="create">
+<form on:submit|preventDefault={() => { handleSubmit($suggestion._id) }} class="create">
     <h3>Add a New Suggestion</h3>
 
     <div>
@@ -110,7 +114,7 @@
     <div>
         <label for="tag">Tag:</label>
         <select on:change={(e) => (formValues.tag = e.target.value)} value={formValues.tag} id="tag" name="tag">
-            <option value="bug" selected>Bug</option>
+            <option value="bug">Bug</option>
             <option value="improvement">Improvement</option>
             <option value="issue">Issue</option>
             <option value="new feature">New Feature</option>

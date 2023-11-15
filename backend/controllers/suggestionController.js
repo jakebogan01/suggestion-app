@@ -26,11 +26,11 @@ const getSuggestion = async ( req, res ) => {
              // })
              .populate({
                   path: "comments",
-                  select: "body createdAt",
+                  select: "body user createdAt",
                   populate: {
                        path: "replies",
                        model: "Reply",
-                       select: "body createdAt"
+                       select: "body user createdAt"
                   }
              });
 

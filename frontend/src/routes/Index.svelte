@@ -4,12 +4,12 @@
      import router from 'page';
      import { onMount, getContext } from "svelte";
      import Suggestions from "../stores/suggestions";
-     import Suggestion from "../stores/suggestion";
 
      const currentUser = getContext('user');
+     const suggestion = getContext('suggestion');
 
      onMount( async () => {
-          Suggestion.set([]);
+          suggestion.set(null);
 
           const response = await fetch( "/api/suggestions/", {
                headers: {
@@ -28,7 +28,7 @@
           localStorage.setItem('user', null);
           currentUser.set(null);
           Suggestions.set([]);
-          Suggestion.set([]);
+          suggestion.set(null);
           router.redirect('/login');
      };
 </script>

@@ -12,10 +12,12 @@
     import error404 from "./routes/Error/404.svelte";
 
     const user = writable(JSON.parse(localStorage.getItem('user')));
+    const suggestion = writable(JSON.parse(null));
     setContext('user', user);
+    setContext('suggestion', suggestion);
 
-    let page
-    let params
+    let page;
+    let params;
 
     router("/Register", () => {
         if ($user) {

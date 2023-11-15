@@ -1,4 +1,5 @@
 const Reply = require( "../models/replyModel" );
+const mongoose = require("mongoose");
 
 // GET all replies
 const getReplies = async ( req, res ) => {
@@ -27,7 +28,29 @@ const createReply = async ( req, res ) => {
      }
 };
 
+// DELETE reply
+const deleteReply = async ( req, res ) => {
+     const { id } = req.params;
+
+     if ( !mongoose.Types.ObjectId.isValid( id ) ) {
+          return res.status( 404 ).json({ error: "No such reply" });
+     }
+
+     const reply = await Reply.findOneAndDelete({ _id: id });
+
+     if ( !reply ) {
+          return res.status( 404 ).json({ error: "No such reply" });
+     }
+
+     try {
+          res.status( 200 ).json({ message: "Reply deleted successfully" });
+     } catch ( error ) {
+          res.status( 400 ).json({ error });
+     }
+};
+
 module.exports = {
      getReplies,
-     createReply
+     createReply,
+     deleteReply
 };
