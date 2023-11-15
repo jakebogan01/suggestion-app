@@ -7,6 +7,8 @@
 
      const currentUser = getContext('user');
      const suggestion = getContext('suggestion');
+     let currentPageData;
+     $: currentPageData;
 
      onMount( async () => {
           suggestion.set(null);
@@ -20,7 +22,8 @@
           const data = await response.json();
 
           if ( response.ok ) {
-               Suggestions.set([ data ]);
+               Suggestions.set([ data.suggestions ]);
+               currentPageData = data;
           }
      })
 
@@ -31,6 +34,31 @@
           suggestion.set(null);
           router.redirect('/login');
      };
+
+     const updatePagination = async (action, num) => {
+            if (action === "next" && num < currentPageData?.totalPages) {
+                 num++;
+            }
+
+            if (action === "prev" && num > 1) {
+                 num--;
+            }
+
+          suggestion.set(null);
+
+          const response = await fetch( `/api/suggestions/?page=${num}`, {
+               headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${$currentUser.token}`,
+               },
+          });
+          const data = await response.json();
+
+          if ( response.ok ) {
+               Suggestions.set([ data.suggestions ]);
+               currentPageData = data;
+          }
+     }
 </script>
 
 <div>
@@ -51,6 +79,13 @@
                {/each}
           {/if}
      </div>
+
+     <nav aria-label="Pagination" class="mx-auto mt-6 flex max-w-7xl justify-between px-4 text-sm font-medium text-gray-700 sm:px-6 lg:px-8">
+          <div class="flex flex-1 justify-between sm:justify-end">
+               <button type="button" on:click={() => ( updatePagination('prev', currentPageData?.currentPage) )} disabled={currentPageData?.currentPage < currentPageData?.totalPages} class="disabled:opacity-50 relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Previous</button>
+               <button type="button" on:click={() => ( updatePagination('next', currentPageData?.currentPage) )} disabled={currentPageData?.currentPage >= currentPageData?.totalPages} class="disabled:opacity-50 relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Next</button>
+          </div>
+     </nav>
 
      <div>
           <button on:click={handleLogout} type="button">Log out</button>

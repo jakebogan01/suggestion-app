@@ -18,6 +18,8 @@
     let error = [];
     let commentFormFields = {body: "", user: null, suggestion: null};
     let replyFormFields = {body: "", user: null, comment: null};
+    let currentPageData;
+    $: currentPageData;
 
     onMount( async () => {
         const response = await fetch( `/api/suggestions/${ params?.slug }`, {
@@ -29,11 +31,12 @@
         const data = await response.json();
 
         if ( response.ok ) {
-            suggestion.set(data[0]);
+            suggestion.set(data.suggestion[0]);
             comments.set($suggestion?.comments);
             commentFormFields.suggestion = $suggestion?._id;
             commentFormFields.user = $currentUser?.id
             replyFormFields.user = $currentUser?.id
+            currentPageData = data;
         }
     })
 
@@ -166,6 +169,32 @@
         showReplyForm = true;
         replyFormFields.comment = id;
     }
+
+    const updatePagination = async (action, num) => {
+        if (action === "next" && num < currentPageData?.totalPages) {
+            num++;
+        }
+
+        if (action === "prev" && num > 1) {
+            num--;
+        }
+
+        comments.set(null);
+
+        const response = await fetch( `/api/suggestions/${ params?.slug }?page=${num}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${$currentUser.token}`,
+            },
+
+        });
+        const data = await response.json();
+
+        if ( response.ok ) {
+            comments.set(data.suggestion[0]?.comments);
+            currentPageData = data;
+        }
+    }
 </script>
 
 {#if $suggestion}
@@ -216,6 +245,13 @@
 {:else}
     <p>loading...</p>
 {/if}
+
+<nav aria-label="Pagination" class="mx-auto mt-6 flex max-w-7xl justify-between px-4 text-sm font-medium text-gray-700 sm:px-6 lg:px-8">
+    <div class="flex flex-1 justify-between sm:justify-end">
+        <button type="button" on:click={() => ( updatePagination('prev', currentPageData?.currentPage) )} disabled={currentPageData?.currentPage < 2} class="disabled:opacity-50 relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Previous</button>
+        <button type="button" on:click={() => ( updatePagination('next', currentPageData?.currentPage) )} disabled={currentPageData?.currentPage >= currentPageData?.totalPages} class="disabled:opacity-50 relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Next</button>
+    </div>
+</nav>
 
 <div>
     <a href="/">back to suggestions</a>

@@ -3,10 +3,23 @@ const mongoose = require( "mongoose" );
 
 // GET all suggestions
 const getSuggestions = async ( req, res ) => {
-     const suggestions = await Suggestion.find().select( "title slug description tag user_id" ).sort({ createdAt: -1 });
+     const { page = 1, limit = 6 } = req.query;
+
+     const suggestions = await Suggestion.find()
+             .select( "title slug description tag user_id" )
+             .limit(limit * 1)
+             .skip((page - 1) * limit)
+             .sort({ createdAt: -1 })
+             .exec()
+
+     const count = await Suggestion.countDocuments();
 
      try {
-          res.status( 200 ).json( suggestions );
+          res.json({
+               suggestions,
+               totalPages: Math.ceil(count / limit),
+               currentPage: page,
+          });
      } catch ( error ) {
           res.status( 400 ).json({ error });
      }
@@ -15,6 +28,8 @@ const getSuggestions = async ( req, res ) => {
 // GET suggestion
 const getSuggestion = async ( req, res ) => {
      const { slug } = req.params;
+     const { page = "1", limit = "6" } = req.query;
+
      const suggestion = await Suggestion.find( { slug: slug } )
              // .populate({
              //      path: "comments",
@@ -27,6 +42,8 @@ const getSuggestion = async ( req, res ) => {
              .populate({
                   path: "comments",
                   select: "body user createdAt",
+                  perDocumentLimit: (limit * 1),
+                  skip: (page - 1) * limit,
                   populate: {
                        path: "replies",
                        model: "Reply",
@@ -34,12 +51,18 @@ const getSuggestion = async ( req, res ) => {
                   }
              });
 
-     if ( !suggestion || suggestion.length === 0 ) {
+     const count = await Suggestion.countDocuments();
+
+     if ( !suggestion ) {
           return res.status( 404 ).json({ error: "No such feedback" });
      }
 
      try {
-          res.status( 200 ).json( suggestion );
+          res.json({
+               suggestion,
+               totalPages: Math.ceil(count / limit),
+               currentPage: page
+          });
      } catch ( error ) {
           res.status( 400 ).json({ error });
      }
