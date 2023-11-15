@@ -41,7 +41,6 @@
         $comments;
         commentFormFields;
         replyFormFields;
-        console.log($comments)
     }
 
     const deletePost = async ( id ) => {

@@ -120,7 +120,7 @@
             <option value="new feature">New Feature</option>
             <option value="research">Research</option>
             <option value="ui">UI</option>
-            <option value="us">UX</option>
+            <option value="ux">UX</option>
         </select>
     </div>
 
