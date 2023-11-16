@@ -1,8 +1,8 @@
 <script>
     import router from "page";
-    import { setContext } from 'svelte';
-    import { writable } from 'svelte/store';
-    import Navbar from "./lib/Components/Navbar.svelte";
+    import {setContext} from "svelte";
+    import {writable} from "svelte/store";
+    // import Navbar from "./lib/Components/Navbar.svelte";
     import Register from "./routes/Auth/Register.svelte";
     import Login from "./routes/Auth/Login.svelte";
     import Index from "./routes/Index.svelte";
@@ -11,11 +11,10 @@
     import Edit from "./routes/Edit.svelte";
     import error404 from "./routes/Error/404.svelte";
 
-    const user = writable(JSON.parse(localStorage.getItem('user')));
+    const user = writable(JSON.parse(localStorage.getItem("user")));
     const suggestion = writable(JSON.parse(null));
-    setContext('user', user);
-    setContext('suggestion', suggestion);
-
+    setContext("user", user);
+    setContext("suggestion", suggestion);
     let page;
     let params;
 
@@ -78,9 +77,14 @@
     router.start()
 </script>
 
-<div class="font-manrope">
-      <Navbar />
-    <div>
-        <svelte:component this="{ page }" params="{ params }" />
-    </div>
+<!--<Navbar />-->
+
+<div style="min-height: 100vh;">
+    <svelte:component this="{page}" params="{params}" />
 </div>
+
+<style global>
+    :global(body) {
+        background-color: #f2f2f2;
+    }
+</style>

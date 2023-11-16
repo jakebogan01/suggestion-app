@@ -1,5 +1,5 @@
-import { writable } from "svelte/store";
+import {writable} from "svelte/store";
 
-const Suggestions = writable( [] );
+const Suggestions = writable([]);
 
 export default Suggestions;

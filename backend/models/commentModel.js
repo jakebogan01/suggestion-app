@@ -1,11 +1,11 @@
-const mongoose = require( "mongoose" );
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema(
     {
         body: {
             type: String,
-            required: [ true, "Body is required" ],
+            required: [true, "Body is required"],
         },
         suggestion: {
             type: Schema.Types.ObjectId,
@@ -18,7 +18,7 @@ const CommentSchema = new Schema(
             required: true
         }
     },
-    { timestamps: true }
+    {timestamps: true}
 );
 
 CommentSchema.virtual("replies", {
@@ -27,7 +27,7 @@ CommentSchema.virtual("replies", {
     foreignField: "comment"
 });
 
-CommentSchema.set("toObject", { virtuals: true });
-CommentSchema.set("toJSON", { virtuals: true });
+CommentSchema.set("toObject", {virtuals: true});
+CommentSchema.set("toJSON", {virtuals: true});
 
-module.exports = mongoose.model( "Comment", CommentSchema );
+module.exports = mongoose.model("Comment", CommentSchema);
