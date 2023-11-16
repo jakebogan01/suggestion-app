@@ -18,7 +18,7 @@
     };
 
     onMount( async () => {
-        const response = await fetch( `/api/suggestions/${ params.slug }`, {
+        const response = await fetch( `https://pny-suggestion-app.vercel.app/api/suggestions/${ params.slug }`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${$currentUser.token}`,
@@ -43,7 +43,7 @@
     const handleSubmit = async (id) => {
         formValues.slug = formValues.title.toLowerCase().replace(/ /g, "-");
 
-        const response = await fetch(`/api/suggestions/${ id }`, {
+        const response = await fetch(`https://pny-suggestion-app.vercel.app/api/suggestions/${ id }`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

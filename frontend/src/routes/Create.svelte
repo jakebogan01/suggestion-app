@@ -19,7 +19,7 @@
     const handleSubmit = async () => {
         formValues.slug = formValues.title.toLowerCase().replace(/ /g, "-");
 
-        const response = await fetch("/api/suggestions/", {
+        const response = await fetch("https://pny-suggestion-app.vercel.app/api/suggestions/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

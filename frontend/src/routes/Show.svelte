@@ -19,7 +19,7 @@
     $: currentPageData;
 
     onMount(async () => {
-        const response = await fetch(`/api/suggestions/${ params?.slug }`, {
+        const response = await fetch(`https://pny-suggestion-app.vercel.app/api/suggestions/${ params?.slug }`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${$currentUser?.token}`,
@@ -45,7 +45,7 @@
     }
 
     const deletePost = async (id) => {
-        const response = await fetch(`/api/suggestions/${id}`, {
+        const response = await fetch(`https://pny-suggestion-app.vercel.app/api/suggestions/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -69,7 +69,7 @@
     }
 
     const deleteComment = async (id) => {
-        const response = await fetch(`/api/comments/${id}`, {
+        const response = await fetch(`https://pny-suggestion-app.vercel.app/api/comments/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -88,7 +88,7 @@
     }
 
     const deleteReply = async (id) => {
-        const response = await fetch(`/api/replies/${id}`, {
+        const response = await fetch(`https://pny-suggestion-app.vercel.app/api/replies/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -109,7 +109,7 @@
     }
 
     const postComment = async () => {
-        const response = await fetch("/api/comments/", {
+        const response = await fetch("https://pny-suggestion-app.vercel.app/api/comments/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -131,7 +131,7 @@
     };
 
     const postReply = async () => {
-        const response = await fetch("/api/replies/", {
+        const response = await fetch("https://pny-suggestion-app.vercel.app/api/replies/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -169,7 +169,7 @@
         }
 
         comments.set(null);
-        const response = await fetch(`/api/suggestions/${ params?.slug }?page=${num}`, {
+        const response = await fetch(`https://pny-suggestion-app.vercel.app/api/suggestions/${ params?.slug }?page=${num}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${$currentUser.token}`,

@@ -19,7 +19,7 @@
                return;
           }
 
-          const response = await fetch("/api/user/register", {
+          const response = await fetch("https://pny-suggestion-app.vercel.app/api/user/register", {
                method: "POST",
                headers: {
                     "Content-Type": "application/json",

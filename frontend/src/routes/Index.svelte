@@ -12,8 +12,7 @@
 
      onMount(async () => {
           suggestion.set(null);
-
-          const response = await fetch("/api/suggestions/", {
+          const response = await fetch("https://pny-suggestion-app.vercel.app/api/suggestions/", {
                headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${$currentUser.token}`,
@@ -47,7 +46,7 @@
 
           suggestion.set(null);
 
-          const response = await fetch( `/api/suggestions/?page=${num}`, {
+          const response = await fetch( `https://pny-suggestion-app.vercel.app/api/suggestions/?page=${num}`, {
                headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${$currentUser.token}`,
@@ -61,37 +60,6 @@
           }
      }
 </script>
-
-<!--<div>-->
-<!--     <a href="/suggestion/create">Create Suggestion</a>-->
-<!--     <div class="space-y-4 px-4">-->
-<!--          {#if $Suggestions.length < 1}-->
-<!--               <p>loading...</p>-->
-<!--          {:else}-->
-<!--               {#each $Suggestions[0] as suggestion (suggestion._id)}-->
-<!--                    <div class="border-2 border-black p-2">-->
-<!--                         <p>{suggestion.title}</p>-->
-<!--                         <a href="/suggestions/{suggestion.slug}" class="text-blue-500">{suggestion.slug}</a>-->
-<!--                         <p>{suggestion.description}</p>-->
-<!--                         <p class="p-2 bg-blue-200">{suggestion.tag}</p>-->
-<!--                    </div>-->
-<!--               {:else}-->
-<!--                    <p>There is no feedback</p>-->
-<!--               {/each}-->
-<!--          {/if}-->
-<!--     </div>-->
-
-<!--     <nav aria-label="Pagination" class="mx-auto mt-6 flex max-w-7xl justify-between px-4 text-sm font-medium text-gray-700 sm:px-6 lg:px-8">-->
-<!--          <div class="flex flex-1 justify-between sm:justify-end">-->
-<!--               <button type="button" on:click={() => ( updatePagination("prev", currentPageData?.currentPage) )} disabled={currentPageData?.currentPage < currentPageData?.totalPages} class="disabled:opacity-50 relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Previous</button>-->
-<!--               <button type="button" on:click={() => ( updatePagination("next", currentPageData?.currentPage) )} disabled={currentPageData?.currentPage >= currentPageData?.totalPages} class="disabled:opacity-50 relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Next</button>-->
-<!--          </div>-->
-<!--     </nav>-->
-
-<!--     <div>-->
-<!--          <button on:click={handleLogout} type="button">Log out</button>-->
-<!--     </div>-->
-<!--</div>-->
 
 <div class="sm:py-6 dark:bg-black" style="min-height: 100vh;">
      <div class="font-jost font-normal max-w-[1100px] mx-auto">
