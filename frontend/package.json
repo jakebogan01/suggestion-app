@@ -11,7 +11,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
     "svelte": "^4.0.5",
-    "vite": "^4.4.5",
+    "vite": "^4.5.3",
     "pag": "^1.0.1",
     "postcss": "^8.4.24",
     "postcss-load-config": "^4.0.1",
